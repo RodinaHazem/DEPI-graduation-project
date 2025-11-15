@@ -3,28 +3,7 @@ import React from 'react'
 export default function Login() {
   return (
     <div>
-      <div>
-        <form>
-      
-          <div class="mb-3">
-            <label for="inputEmail" class="form-label">
-              Email address
-            </label>
-            <input type="email" class="form-control" id="inputEmail" />
-          </div>
-          <div class="mb-3">
-            <label for="inputPassword" class="form-label">
-              Password
-            </label>
-            <input type="password" class="form-control" id="inputPassword" />
-          </div>
-   
-        
-          <button type="submit" class="btn btn-primary">
-            Sign in
-          </button>
-        </form>
-      </div>
+
     </div>
   );
 }

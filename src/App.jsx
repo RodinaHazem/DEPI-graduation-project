@@ -1,13 +1,15 @@
+// import { createBrowserRouter } from 'react-router-dom';
 import './App.css'
 import Login from './auth/login/Login';
 import Register from './auth/register/Register';
 
 function App() {
 
-
+// const routes = createBrowserRouter([
   return (
     <>
-      <Register />
+      <Register/>
+     {/* <RouterProvider router={routes} />; */}
     </>
   );
 }
