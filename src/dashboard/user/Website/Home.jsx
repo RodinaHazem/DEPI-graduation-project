@@ -14,11 +14,13 @@ const WebsiteTitle = styled.h1`
 const Container = styled.div`
   width: 80%;
   margin: 80px auto;
+
 `;
 const Img = styled.img`
   position: absolute;
-  right: 0;
-  bottom: 0;
+  top: 100px;
+  right: 20px;
+
 `;
 
 const Details = styled.details`
@@ -56,10 +58,18 @@ export default function Home() {
                 movement as committed to transformation.”
               </p>
             </Details>
-            <Button primary>Get Started</Button>
+            <Button
+              primary
+              onClick={() => (window.location.href = "/register")}
+            >
+              Get Started
+            </Button>
           </div>
 
-          <Img src="/public/images/top-view-woman-with-travel-essentials 1.png"></Img>
+          <Img
+            src="/public/images/80811-removebg-preview.png"
+            alt="travel essentials"
+          />
         </Container>
       </Header>
     </>

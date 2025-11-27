@@ -49,6 +49,7 @@ export const Div = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 `;
 export const Container = styled.div`
   width: 80%;

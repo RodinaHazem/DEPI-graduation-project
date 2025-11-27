@@ -37,7 +37,7 @@ export const BgCircle = styled.div`
   top: ${(props) => props.top}px;
   scale: ${(props) => props.scale};
   animation: ${shine} 2s ease-in-out infinite;
-`;
+  `;
 export const Div = styled.div`
   background: #fbf8ff;
   background-attachment: fixed;
@@ -48,6 +48,7 @@ export const Div = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 `;
 export const Container = styled.div`
   width: 80%;
