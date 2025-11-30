@@ -165,6 +165,10 @@ export default function Register() {
       password,
       repassword
     });
+    if (res.status === 200 ) {
+      window.localStorage.setItem("email", email);
+      window.location.pathname = "/";
+    }
     console.log("register success:", res.data);
   } catch (err) {
     console.error("register error:", err.response || err);

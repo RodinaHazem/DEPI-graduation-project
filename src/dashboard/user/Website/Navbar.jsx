@@ -2,13 +2,11 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
-
 const Nav = styled.nav`
   height: 70px;
   display: flex;
   padding: 0 50px;
   background: transparent;
-
 `;
 const Left = styled.div`
   display: flex;
@@ -84,61 +82,71 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 export default function Navbar() {
-    return (
-
-          <>
-    <Nav>
-      <Left>
-        <LogoImg
-          src="/icons/Black_and_White_Elegant_Letter_G_Beauty_Logo-removebg-preview.png"
-          alt="logo"
+  return (
+    <>
+      <Nav>
+        <Left>
+          <LogoImg
+            src="/icons/Black_and_White_Elegant_Letter_G_Beauty_Logo-removebg-preview.png"
+            alt="logo"
           />
-      </Left>
+        </Left>
 
-      <Center>
-        <NavLinks>
-          <li>
-            <StyledNavLink
-              to="/"
-              className={({ isActive }) => (isActive ? "active" : "")}
+        <Center>
+          <NavLinks>
+            <li>
+              <StyledNavLink
+                to="/"
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-              Home
-            </StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink
-              to="/about"
-              className={({ isActive }) => (isActive ? "active" : "")}
+                Home
+              </StyledNavLink>
+            </li>
+            <li>
+              <StyledNavLink
+                to="/about"
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-              About
-            </StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink
-              to="/trips"
-              className={({ isActive }) => (isActive ? "active" : "")}
+                About
+              </StyledNavLink>
+            </li>
+            <li>
+              <StyledNavLink
+                to="/trips"
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-              Trips
-            </StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink
-              to="/contact"
-              className={({ isActive }) => (isActive ? "active" : "")}
+                Trips
+              </StyledNavLink>
+            </li>
+            <li>
+              <StyledNavLink
+                to="/contact"
+                className={({ isActive }) => (isActive ? "active" : "")}
               >
-              Contact
-            </StyledNavLink>
-          </li>
-        </NavLinks>
-      </Center>
+                Contact
+              </StyledNavLink>
+            </li>
+          </NavLinks>
+        </Center>
 
-      <Right>
-        <Button onClick={() => (window.location.href = "/login")}>Login</Button>
-        <Button primary onClick={() => (window.location.href = "/register")}>
-          Register
-        </Button>
-      </Right>
-    </Nav>
-</>  
+        <Right>
+
+          { !window.localStorage.getItem("email")?
+            <>
+         <Button onClick={() => (window.location.href = "/login")}>
+            Login
+          </Button>
+          <Button primary onClick={() => (window.location.href = "/register")}>
+            Register
+              </Button>
+            </> : 
+          <Button primary onClick={() => (window.location.href = "/")}>
+            Admin Dashboard
+              </Button>
+
+          }
+        </Right>
+      </Nav>
+    </>
   );
 }

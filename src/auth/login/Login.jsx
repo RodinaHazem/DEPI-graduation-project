@@ -147,13 +147,20 @@ export default function Register() {
     if (PassError || EmailError) return;
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/register", {
+      const res = await axios.post("http://127.0.0.1:8000/api/login", {
         email,
         password,
       });
-      console.log("register success:", res.data);
+         if (res.status === 200 && email=== "RoduHazem@gmail.com" && password==="Rody123@123") {
+           window.localStorage.setItem("email", email);
+           window.location.pathname = "/login/dashboard/admin/pages/Trips";
+          } else if (res.status === 200) {
+           window.location.pathname = "/";
+           
+         }
+           console.log("login success:", res.data);
     } catch (err) {
-      console.error("register error:", err.response || err);
+      console.error("login error:", err.response || err);
     }
   }
 
