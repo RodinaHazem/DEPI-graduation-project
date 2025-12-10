@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { UserContext } from "../../../context/UserContext";
 
 const Nav = styled.nav`
   height: 70px;
@@ -82,6 +83,8 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 export default function Navbar() {
+  let { userToken } = useContext(UserContext);
+  console.log("Navbar userToken:", userToken);
   return (
     <>
       <Nav>
@@ -131,7 +134,7 @@ export default function Navbar() {
 
         <Right>
 
-          { !window.localStorage.getItem("email")?
+          {!window.localStorage.getItem("access_token") ?
             <>
          <Button onClick={() => (window.location.href = "/login")}>
             Login
@@ -140,8 +143,8 @@ export default function Navbar() {
             Register
               </Button>
             </> : 
-          <Button primary onClick={() => (window.location.href = "/")}>
-            Admin Dashboard
+          <Button primary onClick={() => (window.location.href = "/UserDashboard")}>
+            User Dashboard
               </Button>
 
           }

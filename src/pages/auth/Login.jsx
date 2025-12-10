@@ -1,7 +1,12 @@
-import axios from "axios";
-import { Link } from "react-router-dom";
-import React, { useState } from "react";
+// import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import axios from "axios";
+import { Circles } from "react-loader-spinner";
+import { UserContext } from "../../context/UserContext";
 
 const fadeIn = keyframes`
 	from {
@@ -101,11 +106,14 @@ export const Label = styled.label`
   margin-top: 8px;
 `;
 export const SignUp = styled.button`
-  background-color: #8c51fe;
+  background-color: ${(props) => (props.disabled ? "#bdb2ff" : "#8c51fe")};
   color: white;
   border: none;
   border-radius: 5px;
   height: 40px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
   transition: all 200ms ease-in-out;
   &:hover {
     transform: scale(1.01);
@@ -115,66 +123,59 @@ export const SignUp = styled.button`
   }
 `;
 
-export default function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepassword] = useState("");
-  const [PassError, setPassError] = useState("");
-  const [EmailError, setEmailError] = useState("");
-  const [NameError, setNameError] = useState("");
+export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  let { setUserToken} = useContext(UserContext);
+  const Yup = yup.object({
 
-  // Regex patterns
-  const Passregex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
-  const Emailregex = /^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const Nameregex = /^[A-Za-z]{2,}(?: [A-Za-z]{2,})*$/;
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!Passregex.test(password) || password.length < 10) {
-      setPassError(
-        <span className="text-danger">
-          Password must be at least 10 and contain at least one letter , one number and one
-          character!
-        </span>
+    email: yup
+      .string()
+      .matches(/^[\w.-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid email format")
+      .required("Email is required")
+      .email("Invalid email format"),
+    password: yup
+      .string()
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d).+$/,
+        "Password must contain at least one letter and one number"
+      ),
+  });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup,
+    onSubmit: handleSubmit,
+  });
+  let navigate = useNavigate();
+  async function handleSubmit(values) {
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        "http://127.0.0.1:8000/api/login",
+        values
       );
-    } else {
-      setPassError("");
-    }
-    if (!Emailregex.test(email)) {
-      setEmailError(
-        <span className="text-danger">Please enter a valid email address!</span>
+      setLoading(false);
+      if (res.status === 200) {
+        navigate("/UserDashboard");
+        // window.localStorage.setItem("email", values.email);
+        // window.localStorage.setItem("refresh_token", res.data.refresh_token);
+        window.localStorage.setItem("access_token", res.data.access_token);
+        setUserToken(res.data.access_token);
+        setLoading(false);
+      }
+      console.log("login success:", res.data);
+    } catch (err) {
+      console.error(
+        "login error:", setError(err.response.data?.message.toString())
+        
       );
-    } else {
-      setEmailError("");
     }
-    if (!Nameregex.test(name)) {
-      setNameError(
-        <span className="text-danger">Please enter a valid name!</span>
-      );
-    } else {
-      setNameError("");
-    }
-
-  if (PassError || EmailError || NameError) return;
-
-  // All good — send to backend
-  try {
-    const res = await axios.post("http://127.0.0.1:8000/api/register", {
-      name,
-      email,
-      password,
-      repassword
-    });
-    if (res.status === 200 ) {
-      window.localStorage.setItem("email", email);
-      window.location.pathname = "/";
-    }
-    console.log("register success:", res.data);
-  } catch (err) {
-    console.error("register error:", err.response || err);
-  }
-
-
   }
 
   return (
@@ -195,61 +196,62 @@ export default function Register() {
         />
       </LogoName>
       <Container>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={formik.handleSubmit}>
           <Title>Register Here</Title>
-          <div>
-            <Label htmlFor="Username">Username</Label>
-            <Input
-              type="text"
-              id="Username"
-              placeholder="RodyHazem"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          {NameError ? <div>{NameError}</div> : ""}
           <div>
             <Label htmlFor="Email">Email address</Label>
             <Input
+              name="email"
               type="email"
               id="Email"
               placeholder="rody@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
           </div>
-          {EmailError ? <div>{EmailError}</div> : ""}
+          {formik.touched.email && formik.errors.email ? (
+            <span className="text-danger">{formik.errors.email}</span>
+          ) : null}
           <div>
             <Label htmlFor="Password">Password</Label>
             <Input
+              name="password"
               type="password"
               id="Password"
               placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {PassError ? <div>{PassError}</div> : ""}
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              />
+            {formik.touched.password && formik.errors.password ? (
+              <span className="text-danger">{formik.errors.password}</span>
+            ) : null}
           </div>
-          <div>
-            <Label htmlFor="ConfirmPassword">Confirm Password</Label>
-            <Input
-              type="password"
-              id="ConfirmPassword"
-              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-              value={repassword}
-              onChange={(e) => setRepassword(e.target.value)}
-            />
-            {repassword !== password && PassError == "" ? (
-              <span>Passwords do not match!</span>
-            ) : (
-              ""
-            )}
-          </div>
+              {error && <p className="text-danger">Invalid Email or Password</p>}
           <p>
-            Already hava an account?
-            <Link className="text-decoration-none" to="/login">Login</Link>
+            Dont have an account?
+            <Link className="text-decoration-none" to="/login">
+              Sign Up
+            </Link>
           </p>
-          <SignUp type="submit">Sign Up</SignUp>
+          {loading ? (
+            <SignUp type="button">
+              <Circles
+                height="20"
+                width="20"
+                color="#ffffff"
+                ariaLabel="circles-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            </SignUp>
+          ) : (
+            <SignUp disabled={!(formik.isValid && formik.dirty)} type="submit">
+              Sign In
+            </SignUp>
+          )}
         </Form>
       </Container>
     </Div>

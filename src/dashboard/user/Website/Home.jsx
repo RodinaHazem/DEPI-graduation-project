@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
+
 
 const Header = styled.header`
   background: linear-gradient(#e8e6eaf9, #8c51fe);
@@ -72,6 +74,7 @@ export default function Home() {
           />
         </Container>
       </Header>
+      <Footer />
     </>
   );
 }

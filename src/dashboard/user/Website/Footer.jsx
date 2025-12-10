@@ -15,6 +15,7 @@ const Img = styled.img`
 
 const Content = styled.div`
   padding: 10px 10px;
+  background: #370897;
   text-align: center;
   height: 80px;
   color: white;
